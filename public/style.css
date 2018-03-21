@@ -25,11 +25,14 @@ main  {
 }
 
 footer {
-  margin-top: 50px;
-  padding-top: 25px;
+  background: #e0c7c799;
+  margin: 50px;
+  padding: 25px;
   border-top: 1px solid lightgrey;
+  width: 50%;
+  border-radius: 25px;
 }
 
 footer > a {
-  color: #BBBBBB;
+  color: blue;
 }
