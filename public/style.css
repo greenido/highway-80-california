@@ -1,0 +1,35 @@
+/* styles
+  @author: Ido Green | greenido.wordpress.com | @greenido
+ You might want to try something fancier: less: http://lesscss.org/ 
+*/
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: helvetica, arial, sans-serif;
+  margin: 25px;
+}
+
+.myh1 {
+  font-weight: bold;
+  color: #f1f1f1;
+}
+
+main  {
+  margin-top: 30px;
+  width: 99%;
+  border-radius: 25px;
+  background-color:  #c7c78a85;
+  padding: 1em;
+}
+
+footer {
+  margin-top: 50px;
+  padding-top: 25px;
+  border-top: 1px solid lightgrey;
+}
+
+footer > a {
+  color: #BBBBBB;
+}
