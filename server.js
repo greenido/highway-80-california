@@ -134,22 +134,20 @@ app.post('/', function(req, res, next) {
           roadConditionsStr = roadConditionsStr.toLowerCase();
           roadConditionsStr = roadConditionsStr.replace(/in/g,'In');
           console.log("== roadConditionsStr: " + roadConditionsStr);
-          
-          //console.log("== lastUpdate: " + lastUpdate + " | snowToday: " + snowToday + " upperSnow: " + upperSnow +" lowerSnow: " + lowerSnow);
-  
+      
           if (roadConditionsStr == null || roadConditionsStr.length < 3) {
             assistant.ask("Could not get the road conditions. You can check with the Caltrans Highway Information Network at phone 800-427-7623. Have safe trip!");
             return;
           }
           
-          let res = "Hey! The current road conditions on " + roadConditionsStr + " Wish me to say it again?";
+          let res = "Hey! The current road conditions on " + roadConditionsStr + ". Wish me to say it again?";
            // 'tell' (and not 'ask') as we don't wish to finish the conversation
           assistant.ask(res);
         }
         catch(error) {
           console.log("(!) Error: " + error + " json: "+ JSON.stringify(error));
         }
-    }); //
+    });
   }
   
   //
