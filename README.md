@@ -2,7 +2,7 @@
 ![](https://cdn.glitch.com/f6cc1bf3-90a1-45e9-9d2e-fd165b25be5e%2FScreenshot%202018-03-02%2020.11.41.png?1520050328584)
 ### Actions on Google to know the road conditions on highway 80 from San Francisco to Tahoe.
 
-* The [Highway 80 Conditions Action on Google](https://assistant.google.com/services/a/uid/0000008b93c73c1c?hl=en)
+* The [Highway 80 Conditions Action on Google](https://assistant.google.com/services/a/uid/00000085e4bd32d4?hl=en)
 * The Web [live demo](https://highway-80-california.glitch.me/)
     
 ### Project Details
