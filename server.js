@@ -142,9 +142,9 @@ app.post('/', function(req, res, next) {
             return;
           }
           
-          let res = "Hey! The current road conditions on " + roadConditionsStr + " Have a good and safe trip!";
+          let res = "Hey! The current road conditions on " + roadConditionsStr + " Wish me to say it again?";
            // 'tell' (and not 'ask') as we don't wish to finish the conversation
-          assistant.tell(res);
+          assistant.ask(res);
         }
         catch(error) {
           console.log("(!) Error: " + error + " json: "+ JSON.stringify(error));
