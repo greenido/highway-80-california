@@ -26,6 +26,14 @@ const dateJS = require('./dateLib.js');
 const prettyjson = require('prettyjson');
 const toSentence = require('underscore.string/toSentence');
 
+var admin = require('firebase-admin');
+admin.initializeApp({
+  credential: admin.credential.cert('.data/highway-80-california-firebase-adminsdk-key.json'),
+  databaseURL: 'https://highway-80-california.firebaseio.com'
+});
+const db = admin.database();
+const ref = db.ref('i80-AoG/Calls');
+
 app.use(bodyParser.json({type: 'application/json'}));
 app.use(express.static('public'));
 
@@ -108,9 +116,21 @@ app.post('/', function(req, res, next) {
   }
   
   //
+  // Save to Firebase
+  //
+  function saveToDB(str) {
+    var now = new Date().getTime();
+    const usersRef = ref.child(now);
+    usersRef.set({
+      roadStr: str,
+      date: new Date().toISOString()
+    });
+  }
+  
+  //
   // Create functions to handle intents here
   //
-  function getNextFlightInfo(assistant) {
+  function getRoadConditions(assistant) {
     
     console.log('** Handling action: ' + KEYWORD_ACTION );
 
@@ -120,6 +140,7 @@ app.post('/', function(req, res, next) {
         if (err) {
             console.log("An error occurred. Err: " + JSON.stringify(err));
             assistant.tell("Sorry something is not working at the moment. Please try again later and be happy.");
+            saveToDB("ERROR - Can't get info and return an error answer to the action");
             return;
         }
         try {  
@@ -128,21 +149,23 @@ app.post('/', function(req, res, next) {
           let inx2 = html.indexOf('<pre>', inx1) + 5; // we got 2 > to skip
           let inx3 = html.indexOf('</pre>', inx2); 
           let roadConditionsStr = html.substring(inx2, inx3).trim();
-          roadConditionsStr = roadConditionsStr.replace(/\[/g,'');
-          roadConditionsStr = roadConditionsStr.replace(/\]/g,'');
-          roadConditionsStr = roadConditionsStr.replace(/CO/g,'');
+          roadConditionsStr = roadConditionsStr.replace(/\[/g, '');
+          roadConditionsStr = roadConditionsStr.replace(/\]/g, '');
+          roadConditionsStr = roadConditionsStr.replace(/CO/g, '');
           roadConditionsStr = roadConditionsStr.toLowerCase();
-          roadConditionsStr = roadConditionsStr.replace(/in/g,'In');
+          roadConditionsStr = roadConditionsStr.replace(/in /g, 'In ');
           console.log("== roadConditionsStr: " + roadConditionsStr);
       
           if (roadConditionsStr == null || roadConditionsStr.length < 3) {
             assistant.ask("Could not get the road conditions. You can check with the Caltrans Highway Information Network at phone 800-427-7623. Have safe trip!");
+            saveToDB("ERROR - could not get the road conditions");
             return;
           }
           
           let res = "Hey! The current road conditions on " + roadConditionsStr + ". Wish me to say it again?";
            // 'tell' (and not 'ask') as we don't wish to finish the conversation
           assistant.ask(res);
+          saveToDB(roadConditionsStr);
         }
         catch(error) {
           console.log("(!) Error: " + error + " json: "+ JSON.stringify(error));
@@ -154,7 +177,7 @@ app.post('/', function(req, res, next) {
   // Add handler functions to the action router.
   //
   let actionRouter = new Map();
-  actionRouter.set(KEYWORD_ACTION, getNextFlightInfo);
+  actionRouter.set(KEYWORD_ACTION, getRoadConditions);
   
   // Route requests to the proper handler functions via the action router.
   assistant.handleRequest(actionRouter);
