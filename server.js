@@ -17,7 +17,10 @@
 const express = require('express');
 const ApiAiAssistant = require('actions-on-google').ApiAiAssistant;
 const bodyParser = require('body-parser');
-const request = require('request');
+
+const request = require('request'); // TODO: replace all of these calls with GOT (the line below)
+const got = require('got');
+
 const app = express();
 const Map = require('es6-map');
 const dateJS = require('./dateLib.js');
@@ -37,9 +40,49 @@ const ref = db.ref('i80-AoG/Calls');
 app.use(bodyParser.json({type: 'application/json'}));
 app.use(express.static('public'));
 
-// http://expressjs.com/en/starter/basic-routing.html
+//
+// Main entry points
+//
 app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
+});
+
+app.get("/getText", function (req, res) {
+  console.log('** Handling getText/' );
+  (async () => {
+    try {
+        const response = await got('http://www.dot.ca.gov/hq/roadinfo/display.php?page=i80');
+        try {  
+          let html = response.body; 
+          let inx1 = html.indexOf('<h2>') + 20;
+          let inx2 = html.indexOf('<pre>', inx1) + 5; // we got 2 > to skip
+          let inx3 = html.indexOf('</pre>', inx2); 
+          let roadConditionsStr = html.substring(inx2 + 9, inx3).trim();
+          roadConditionsStr = roadConditionsStr.replace(/\[/g, '');
+          roadConditionsStr = roadConditionsStr.replace(/\]/g, '');
+          roadConditionsStr = roadConditionsStr.replace(/CO/g, '');
+          roadConditionsStr = roadConditionsStr.toLowerCase();
+          roadConditionsStr = roadConditionsStr.replace(/in /g, '<br><br>In ');
+          console.log("== roadConditionsStr: " + roadConditionsStr);
+      
+          if (roadConditionsStr == null || roadConditionsStr.length < 3) {
+            res.send("<b>Could not get the road conditions.</b><br>You can check with the Caltrans Highway Information Network at phone 800-427-7623.<br>Have safe trip!");
+            return;
+          }
+          
+          let resText = "🛣 The current road conditions (" + getCurrentDateTime() + ") " + roadConditionsStr;
+          res.send(resText);
+        }
+        catch(error) {
+          console.log("🧐 getText Error: " + error + " json: "+ JSON.stringify(error));
+        }
+    } catch (error) {
+        console.log("/getText Err: " + error.response.body);
+    }
+  })();
+  
+    
+   
 });
 
 // Calling GA to make sure how many invocations we had on this skill
@@ -58,8 +101,6 @@ app.post('/', function(req, res, next) {
   
   // Instantiate a new API.AI assistant object.
   const assistant = new ApiAiAssistant({request: req, response: res});
-  //let flightDate = assistant.getArgument('date');
-  // Declare constants for your action and parameter names
   const KEYWORD_ACTION = 'input.welcome'; 
   
   //
@@ -131,9 +172,7 @@ app.post('/', function(req, res, next) {
   // Create functions to handle intents here
   //
   function getRoadConditions(assistant) {
-    
     console.log('** Handling action: ' + KEYWORD_ACTION );
-
     request({ method: 'GET',
              url:'http://www.dot.ca.gov/hq/roadinfo/display.php?page=i80'},
             function (err, response, body) {
@@ -188,7 +227,7 @@ app.post('/', function(req, res, next) {
 //
 app.use(function (err, req, res, next) {
   console.error(err.stack);
-  res.status(500).send('Oppss... could not check when is the next flight to space.');
+  res.status(500).send('Oppss... Something is not working. Please let @greenido know about it.');
 })
 
 //
@@ -199,6 +238,19 @@ function logObject(message, object, options) {
   //console.log(prettyjson.render(object, options));
 }
 
+//
+//
+//
+function getCurrentDateTime() {
+  let currentdate = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+  // let datetime = " " + currentdate.getDate() + "/"
+  //               + (currentdate.getMonth()+1)  + "/" 
+  //               + currentdate.getFullYear() + " @ "  
+  //               + currentdate.getHours() + ":"  
+  //               + currentdate.getMinutes() + ":" 
+  //               + currentdate.getSeconds();
+  return currentdate;
+}
 
 //
 // Listen for requests -- Start the party
