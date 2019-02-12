@@ -36,3 +36,8 @@ footer {
 footer > a {
   color: blue;
 }
+
+#curStatus {
+  text-align: left;
+  font-size: 120%;
+}
