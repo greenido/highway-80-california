@@ -1,7 +1,8 @@
 /* styles
   @author: Ido Green | greenido.wordpress.com | @greenido
- You might want to try something fancier: less: http://lesscss.org/ 
 */
+
+
 * {
   box-sizing: border-box;
 }
@@ -38,6 +39,10 @@ footer > a {
 }
 
 #curStatus {
-  text-align: left;
-  font-size: 120%;
+    text-align: left;
+    font-size: 120%;
+    background: aqua;
+    margin: 0.5em;
+    padding: 0.5em;
+    border-radius: 22px;
 }

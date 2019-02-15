@@ -3,9 +3,12 @@
 ### Actions on Google to know the road conditions on highway 80 from San Francisco to Tahoe.
 
 * The [Highway 80 Conditions Action on Google](https://assistant.google.com/services/a/uid/00000085e4bd32d4?hl=en)
+
 * The Web [live demo](https://highway-80-california.glitch.me/)
+
+#### You can also just remember: https://bit.ly/i80condition
     
-### Project Details
+## Project Details
 
 On the back-end,
 - Your app starts at `server.js` --> This is the main file that will hold the logic of the web hook.

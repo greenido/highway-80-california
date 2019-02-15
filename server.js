@@ -60,9 +60,11 @@ app.get("/getText", function (req, res) {
           let roadConditionsStr = html.substring(inx2 + 9, inx3).trim();
           roadConditionsStr = roadConditionsStr.replace(/\[/g, '');
           roadConditionsStr = roadConditionsStr.replace(/\]/g, '');
-          roadConditionsStr = roadConditionsStr.replace(/CO/g, '');
+          roadConditionsStr = roadConditionsStr.replace(/solano co/gi, 'Solano county:');
+          roadConditionsStr = roadConditionsStr.replace(/placer co/gi, 'Placer county');
           roadConditionsStr = roadConditionsStr.toLowerCase();
-          roadConditionsStr = roadConditionsStr.replace(/in /g, '<br><br>In ');
+          roadConditionsStr = roadConditionsStr.replace(/in the/g, '<br><br>In the');
+          roadConditionsStr = roadConditionsStr.replace(/closed/g, ' 🛑<b>closed</b>');
           console.log("== roadConditionsStr: " + roadConditionsStr);
       
           if (roadConditionsStr == null || roadConditionsStr.length < 3) {
