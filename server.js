@@ -48,7 +48,7 @@ app.get("/", function (request, response) {
 });
 
 app.get("/getText", function (req, res) {
-  console.log('** Handling getText/' );
+  //console.log('** Handling getText/' );
   (async () => {
     try {
         const response = await got('http://www.dot.ca.gov/hq/roadinfo/display.php?page=i80');
@@ -65,7 +65,8 @@ app.get("/getText", function (req, res) {
           roadConditionsStr = roadConditionsStr.toLowerCase();
           roadConditionsStr = roadConditionsStr.replace(/in the/g, '<br><br>In the');
           roadConditionsStr = roadConditionsStr.replace(/closed/g, ' 🛑<b>closed</b>');
-          console.log("== roadConditionsStr: " + roadConditionsStr);
+          roadConditionsStr = roadConditionsStr.replace(/\*\*for /g, '<br>🚗 For ');
+          //console.log("== roadConditionsStr: " + roadConditionsStr);
       
           if (roadConditionsStr == null || roadConditionsStr.length < 3) {
             res.send("<b>Could not get the road conditions.</b><br>You can check with the Caltrans Highway Information Network at phone 800-427-7623.<br>Have safe trip!");
@@ -79,12 +80,9 @@ app.get("/getText", function (req, res) {
           console.log("🧐 getText Error: " + error + " json: "+ JSON.stringify(error));
         }
     } catch (error) {
-        console.log("/getText Err: " + error.response.body);
+        console.log("🧐 /getText Err: " + error.response.body);
     }
   })();
-  
-    
-   
 });
 
 // Calling GA to make sure how many invocations we had on this skill
@@ -92,7 +90,6 @@ const GAurl = "https://ga-beacon.appspot.com/UA-65622529-1/highway-80-california
 request.get(GAurl, (error, response, body) => {
   console.log(" - Called the GA - " + new Date());
 });
-
 
 //
 // Handle webhook requests
