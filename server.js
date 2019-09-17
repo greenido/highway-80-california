@@ -133,7 +133,7 @@ app.post('/', function(req, res, next) {
   }
   
   //
-  // Coz wikipedia api return some data fields not inside tags :/
+  // Coz some APIs return some data fields not inside tags :/
   //
   function cleanHTMLTags(html) {
     if (html != null && html.length > 1) {
@@ -188,18 +188,11 @@ app.post('/', function(req, res, next) {
     roadConditionsStr = roadConditionsStr.replace(/\[/g, '');
     roadConditionsStr = roadConditionsStr.replace(/\]/g, ': ');
     roadConditionsStr = cleanHTMLTags(roadConditionsStr);
-    // roadConditionsStr = roadConditionsStr.replace(/solano co/gi, 'Solano county:');
-    // roadConditionsStr = roadConditionsStr.replace(/placer co/gi, 'Placer county');
-    // roadConditionsStr = roadConditionsStr.toLowerCase();
-    // roadConditionsStr = roadConditionsStr.replace(/in the/g, '<br><br>In the');
-    // roadConditionsStr = roadConditionsStr.replace(/closed/g, ' 🛑<b>closed</b>');
-    // roadConditionsStr = roadConditionsStr.replace(/\*\*for /g, '<br>🚗 For ');
-      
     console.log("== roadConditionsStr: " + roadConditionsStr);
 
     if (roadConditionsStr == null || roadConditionsStr.length < 3) {
       assistant.ask("Could not get the road conditions. You can check with the Caltrans Highway Information Network at phone 800-427-7623. Have safe trip!");
-      saveToDB("ERROR - could not get the road conditions");
+      // 😮 saveToDB("ERROR - could not get the road conditions");
       return;
     }
 
@@ -213,44 +206,6 @@ app.post('/', function(req, res, next) {
     console.log("🧐 getText Error: " + error + " json: "+ JSON.stringify(error));
   }
   });
-
-//     request({ method: 'GET',
-//              url:'http://www.dot.ca.gov/hq/roadinfo/display.php?page=i80'},
-//             function (err, response, body) {
-//         if (err) {
-//             console.log("An error occurred. Err: " + JSON.stringify(err));
-//             assistant.tell("Sorry something is not working at the moment. Please try again later and be happy.");
-//             saveToDB("ERROR - Can't get info and return an error answer to the action");
-//             return;
-//         }
-//         try {  
-//           let html = response.body; 
-//           let inx1 = html.indexOf('<h2>') + 20;
-//           let inx2 = html.indexOf('<pre>', inx1) + 5; // we got 2 > to skip
-//           let inx3 = html.indexOf('</pre>', inx2); 
-//           let roadConditionsStr = html.substring(inx2, inx3).trim();
-//           roadConditionsStr = roadConditionsStr.replace(/\[/g, '');
-//           roadConditionsStr = roadConditionsStr.replace(/\]/g, '');
-//           roadConditionsStr = roadConditionsStr.replace(/CO/g, '');
-//           roadConditionsStr = roadConditionsStr.toLowerCase();
-//           roadConditionsStr = roadConditionsStr.replace(/in /g, 'In ');
-//           console.log("== roadConditionsStr: " + roadConditionsStr);
-      
-//           if (roadConditionsStr == null || roadConditionsStr.length < 3) {
-//             assistant.ask("Could not get the road conditions. You can check with the Caltrans Highway Information Network at phone 800-427-7623. Have safe trip!");
-//             saveToDB("ERROR - could not get the road conditions");
-//             return;
-//           }
-          
-//           let res = "Hey! The current road conditions on " + roadConditionsStr + ". Wish me to say it again?";
-//            // 'tell' (and not 'ask') as we don't wish to finish the conversation
-//           assistant.ask(res);
-//           saveToDB(roadConditionsStr);
-//         }
-//         catch(error) {
-//           console.log("(!) Error: " + error + " json: "+ JSON.stringify(error));
-//         }
-//     });
   }
   
   //
