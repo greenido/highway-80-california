@@ -47,6 +47,14 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
+// Add a health check route in express
+app.get('/_health', (req, res) => {
+  res.status(200).send('ok 🥇');
+})
+
+//
+//
+//
 app.get("/getText", function (req, res) {
   //console.log('** Handling getText/' );
   request.post({url: 'https://roads.dot.ca.gov/roadscell.php' , form: {roadnumber: '80', submit: 'Search'} }, function (error, response, body) {
