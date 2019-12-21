@@ -67,8 +67,8 @@ app.get("/getText", function (req, res) {
 
     let inx1 = html.indexOf('IN THE SAN FRANCISCO BAY ARE') + 2;
     let inx2 = html.indexOf('</p>', inx1) + 1;
-    let inx22 = html.indexOf('</p>', inx2) + 1; 
-    let inx3 = html.indexOf('</p>', inx22); 
+    // let inx22 = html.indexOf('</p>', inx2) + 1; 
+    let inx3 = html.indexOf('</p>', inx2); 
     let roadConditionsStr = '<strong>' + html.substring(inx1 , inx3).trim();
      roadConditionsStr = roadConditionsStr.replace(/\[/g, '');
      roadConditionsStr = roadConditionsStr.replace(/\]/g, ': ');
