@@ -1,5 +1,5 @@
 // 
-// is highway 80 open?
+// Is highway 80 open?
 //
 // @author: Ido Green | @greenido
 // @date: March 2018
@@ -63,21 +63,19 @@ app.get("/getText", function (req, res) {
     //console.log("🚀 RES: " + JSON.stringify(response ));
     try {  
     let html = response.body; 
-    //console.log("===From Web Page ====" + html + "\n\n");
-    let inx1 = html.indexOf('IN THE SAN FRANCISCO') + 2; // BAY ARE
+    let inx1 = html.indexOf('IN THE SAN FRANCISCO') + 2;
     let inx2 = html.indexOf('</p>', inx1) + 1;
-    // let inx22 = html.indexOf('</p>', inx2) + 1;  
-    let inx3 = html.indexOf('</p>', inx2); 
-    let roadConditionsStr = '<strong>' + html.substring(inx1 , inx3).trim();
+    let inx3 = html.indexOf('</div>', inx2); 
+    let roadConditionsStr = '🌉 <strong>' + html.substring(inx1 , inx3).trim();
      roadConditionsStr = roadConditionsStr.replace(/\[/g, '');
      roadConditionsStr = roadConditionsStr.replace(/\]/g, ': ');
     // roadConditionsStr = roadConditionsStr.replace(/solano co/gi, 'Solano county:');
     // roadConditionsStr = roadConditionsStr.replace(/placer co/gi, 'Placer county');
     // roadConditionsStr = roadConditionsStr.toLowerCase();
     // roadConditionsStr = roadConditionsStr.replace(/in the/g, '<br><br>In the');
-    // roadConditionsStr = roadConditionsStr.replace(/closed/g, ' 🛑<b>closed</b>');
-    // roadConditionsStr = roadConditionsStr.replace(/\*\*for /g, '<br>🚗 For ');
-    console.log("== roadConditionsStr: " + roadConditionsStr);
+    roadConditionsStr = roadConditionsStr.replace(/CLOSED/g, ' 🛑<b> CLOSED</b> 🛑 ');
+    roadConditionsStr = roadConditionsStr.replace(/\*\*/g, '<br>🚗 ');
+    //console.log("== roadConditionsStr: " + roadConditionsStr);
 
     if (roadConditionsStr == null || roadConditionsStr.length < 3) {
       res.send("<b>Could not get the road conditions.</b><br>You can check with the Caltrans Highway Information Network at phone 800-427-7623.<br>Have safe trip!");
@@ -196,7 +194,7 @@ app.post('/', function(req, res, next) {
     roadConditionsStr = roadConditionsStr.replace(/\[/g, '');
     roadConditionsStr = roadConditionsStr.replace(/\]/g, ': ');
     roadConditionsStr = cleanHTMLTags(roadConditionsStr);
-    console.log("== roadConditionsStr: " + roadConditionsStr);
+    //console.log("== roadConditionsStr: " + roadConditionsStr);
 
     if (roadConditionsStr == null || roadConditionsStr.length < 3) {
       assistant.ask("Could not get the road conditions. You can check with the Caltrans Highway Information Network at phone 800-427-7623. Have safe trip!");
@@ -260,5 +258,5 @@ function getCurrentDateTime() {
 // Listen for requests -- Start the party
 //
 let server = app.listen(process.env.PORT, function () {
-  console.log('--> Our Webhook is listening on ' + JSON.stringify(server.address()));
+  console.log('❄️ Our Webhook is listening: ' + JSON.stringify(server.address()));
 });
